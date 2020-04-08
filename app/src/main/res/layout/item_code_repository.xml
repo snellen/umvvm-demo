@@ -8,6 +8,9 @@
         <variable
             name="repository"
             type="ch.silvannellen.githubbrowser.model.github.CodeRepository" />
+        <variable
+            name="repositorySelectedCallback"
+            type="ch.silvannellen.githubbrowser.view.user.CodeRepositorySelectedCallback" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="8dp"
+        android:onClick="@{(v) -> repositorySelectedCallback.onSelected(repository)}"
         tools:context=".MainActivity">
 
 

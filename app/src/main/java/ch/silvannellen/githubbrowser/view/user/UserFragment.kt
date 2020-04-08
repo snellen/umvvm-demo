@@ -3,16 +3,17 @@ package ch.silvannellen.githubbrowser.view.user
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.silvannellen.githubbrowser.R
 import ch.silvannellen.githubbrowser.databinding.FragmentUserBinding
 import ch.silvannellen.githubbrowser.di.GithubBrowserApplicationComponent
-import ch.silvannellen.githubbrowser.viewmodel.common.EventObserver
 import ch.silvannellen.githubbrowser.view.framework.GithubBrowserFragment
 import ch.silvannellen.githubbrowser.view.user.di.DaggerUserComponent
 import ch.silvannellen.githubbrowser.view.user.di.UserComponent
+import ch.silvannellen.githubbrowser.viewmodel.common.EventObserver
 import ch.silvannellen.githubbrowser.viewmodel.user.UserViewModel
 import ch.silvannellen.umvvm.viewmodel.BaseViewModel
 import com.squareup.picasso.Picasso
@@ -38,10 +39,11 @@ class UserFragment : GithubBrowserFragment<UserComponent, FragmentUserBinding>()
 
     override fun initialiseView(view: View, savedInstanceState: Bundle?) {
         binding.fragment = this
-        val linearLayoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.VERTICAL }
+        val linearLayoutManager =
+            LinearLayoutManager(context).apply { orientation = LinearLayoutManager.VERTICAL }
         binding.repositoryList.apply {
             layoutManager = linearLayoutManager
-            adapter = CodeRepositoriesAdapter()
+            adapter = CodeRepositoriesAdapter { viewModel.onRepositorySelected(it) }
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
         }
         binding.repositoryListRefresh.setOnRefreshListener {
@@ -68,7 +70,12 @@ class UserFragment : GithubBrowserFragment<UserComponent, FragmentUserBinding>()
 
             viewModel.navigateToRepository.observe(viewLifecycleOwner,
                 EventObserver {
-                    // TODO
+                    findNavController().navigate(
+                        UserFragmentDirections.actionUserFragmentToRepositoryFragment(
+                            it.owner,
+                            it.repoName
+                        )
+                    )
                 })
         }
     }
