@@ -4,6 +4,7 @@ import ch.silvannellen.githubbrowser.model.common.AuthorizationTokenProvider
 import ch.silvannellen.githubbrowser.model.common.Result
 import ch.silvannellen.githubbrowser.model.common.retrofit.RetrofitExecutor
 import ch.silvannellen.githubbrowser.model.github.CodeRepository
+import ch.silvannellen.githubbrowser.model.github.Commit
 import ch.silvannellen.githubbrowser.model.github.GithubRepository
 import ch.silvannellen.githubbrowser.model.github.User
 import ch.silvannellen.githubbrowser.model.github.api.v3.AUTHORIZATION_HEADER_FIELD
@@ -66,6 +67,12 @@ class RetrofitGithubRepository(
         return RetrofitExecutor.execute<Collection<ch.silvannellen.githubbrowser.model.github.api.v3.dto.Repository>, Collection<CodeRepository>>(
             { apiForCurrentVersion.getRepositories(userName) },
             { Result(it.map { CodeRepository(it.id, it.name, it.language, it.updatedAt) }) })
+    }
+
+    override fun getCommits(owner: String, repo: String): Result<Collection<Commit>> {
+        return RetrofitExecutor.execute<Collection<ch.silvannellen.githubbrowser.model.github.api.v3.dto.CommitNode>, Collection<Commit>>(
+            { apiForCurrentVersion.getCommits(owner, repo) },
+            { Result(it.map { Commit(it.commit.author.date, it.commit.author.name, it.commit.message, it.sha) }) })
     }
 
     private val apiForCurrentVersion: GithubApi
