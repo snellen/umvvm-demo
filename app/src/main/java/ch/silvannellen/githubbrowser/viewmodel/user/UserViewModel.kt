@@ -55,6 +55,16 @@ class UserViewModel @Inject constructor(
             _loadingProfile.value = false
         }
     }
+
+    fun refreshRepositoryList(userName: String) {
+        _loadRepositoriesError.value = false
+        _repositories.value = listOf()
+        launch {
+            onLoadRepositoriesResult(loadRepositoriesUseCase.execute(userName))
+            _refreshingRepositoriesList.value = false
+        }
+    }
+
     private fun onLoadRepositoriesResult(repositoriesResult: LoadRepositoriesUseCase.Result) {
         _loadRepositoriesError.value = repositoriesResult !is LoadRepositoriesUseCase.Result.Success
         if (repositoriesResult is LoadRepositoriesUseCase.Result.Success) {
@@ -67,6 +77,15 @@ class UserViewModel @Inject constructor(
         if (userResult is LoadUserUseCase.Result.Success) {
             _userName.value = userResult.user.login
             _userAvatarUrl.value = userResult.user.avatarUrl
+        }
+    }
+
+    fun onRepositorySelected(repo: CodeRepository) {
+        userName.value?.let {
+            _navigateToRepository.value =
+                Event(
+                    CodeRepositoryNavigationSpec(it, repo.name)
+                )
         }
     }
 

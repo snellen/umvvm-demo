@@ -44,6 +44,9 @@ class UserFragment : GithubBrowserFragment<UserComponent, FragmentUserBinding>()
             adapter = CodeRepositoriesAdapter()
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
         }
+        binding.repositoryListRefresh.setOnRefreshListener {
+            viewModel.refreshRepositoryList(args.userName)
+        }
     }
 
     override fun observeViewModel(viewModel: BaseViewModel) {
@@ -58,6 +61,15 @@ class UserFragment : GithubBrowserFragment<UserComponent, FragmentUserBinding>()
             viewModel.repositories.observe(viewLifecycleOwner, Observer {
                 (binding.repositoryList.adapter as CodeRepositoriesAdapter).setRepositories(it)
             })
+
+            viewModel.refreshingRepositoryList.observe(viewLifecycleOwner, Observer {
+                binding.repositoryListRefresh.isRefreshing = it
+            })
+
+            viewModel.navigateToRepository.observe(viewLifecycleOwner,
+                EventObserver {
+                    // TODO
+                })
         }
     }
 }
