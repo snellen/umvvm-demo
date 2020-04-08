@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">GithubBrowser</string>
+    <string name="login_title">Login Fragment</string>
+    <string name="prompt_username">Github.com Username</string>
+    <string name="prompt_access_token">Github.com Personal Access Token</string>
+    <string name="action_sign_in_short">Login</string>
+    <string name="action_sign_in">Login</string>
+    <string name="login_failed_message">Login failed, please check access token and try again</string>
 </resources>
