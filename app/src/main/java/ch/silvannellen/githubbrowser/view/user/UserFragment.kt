@@ -38,6 +38,15 @@ class UserFragment : GithubBrowserFragment<UserComponent, FragmentUserBinding>()
 
     override fun initialiseView(view: View, savedInstanceState: Bundle?) {
         binding.fragment = this
+        val linearLayoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.VERTICAL }
+        binding.repositoryList.apply {
+            layoutManager = linearLayoutManager
+            adapter = CodeRepositoriesAdapter()
+            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+        }
+        binding.repositoryListRefresh.setOnRefreshListener {
+            viewModel.refreshRepositoryList(args.userName)
+        }
     }
 
     override fun observeViewModel(viewModel: BaseViewModel) {
@@ -49,6 +58,18 @@ class UserFragment : GithubBrowserFragment<UserComponent, FragmentUserBinding>()
                 Picasso.get().load(it).into(binding.userAvatar)
             })
 
+            viewModel.repositories.observe(viewLifecycleOwner, Observer {
+                (binding.repositoryList.adapter as CodeRepositoriesAdapter).setRepositories(it)
+            })
+
+            viewModel.refreshingRepositoryList.observe(viewLifecycleOwner, Observer {
+                binding.repositoryListRefresh.isRefreshing = it
+            })
+
+            viewModel.navigateToRepository.observe(viewLifecycleOwner,
+                EventObserver {
+                    // TODO
+                })
         }
     }
 }
