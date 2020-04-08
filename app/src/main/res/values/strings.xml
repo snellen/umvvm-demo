@@ -6,4 +6,5 @@
     <string name="action_sign_in_short">Login</string>
     <string name="action_sign_in">Login</string>
     <string name="login_failed_message">Login failed, please check access token and try again</string>
+    <string name="load_user_failed_message">Failed to load user info</string>
 </resources>
