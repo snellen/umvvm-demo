@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ch.silvannellen.githubbrowser.usecase.login.LoginUseCase
 import ch.silvannellen.githubbrowser.viewmodel.common.Event
 import ch.silvannellen.umvvm.viewmodel.BaseViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : BaseViewModel() {
@@ -22,11 +23,22 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
     val navigateToWelcomeFragment: LiveData<Event<String>> = _navigateToWelcomeFragment
 
     fun onCredentialsChanged(username: String, accessToken: String) {
-        // TODO
+        _loginAvailable.value = username.isNotEmpty() && accessToken.isNotEmpty()
     }
 
     fun onLoginRequested(userName: String, accessToken: String) {
-        // TODO
+        launch {
+            _busy.value = true
+            _loginError.value = false
+            val success =
+                loginUseCase.execute(LoginUseCase.Credentials(userName, accessToken))
+            if (success) {
+                _navigateToWelcomeFragment.value = Event(userName)
+            } else {
+                _loginError.value = true
+            }
+            _busy.value = false
+        }
     }
 
 }
