@@ -3,6 +3,7 @@ package ch.silvannellen.githubbrowser.viewmodel.user
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.silvannellen.githubbrowser.model.github.CodeRepository
+import ch.silvannellen.githubbrowser.usecase.loadrepositories.LoadRepositoriesUseCase
 import ch.silvannellen.githubbrowser.usecase.loaduser.LoadUserUseCase
 import ch.silvannellen.githubbrowser.viewmodel.common.Event
 import ch.silvannellen.umvvm.viewmodel.BaseViewModel
@@ -11,7 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserViewModel @Inject constructor(
-    private val loadUserUseCase: LoadUserUseCase
+    private val loadUserUseCase: LoadUserUseCase,
+    private val loadRepositoriesUseCase: LoadRepositoriesUseCase
 ) : BaseViewModel() {
 
     private val _userName: MutableLiveData<String> = MutableLiveData()
@@ -48,8 +50,15 @@ class UserViewModel @Inject constructor(
         launch {
             coroutineScope {
                 launch { onLoadUserResult(loadUserUseCase.execute(userName)) }
+                launch { onLoadRepositoriesResult(loadRepositoriesUseCase.execute(userName)) }
             }
             _loadingProfile.value = false
+        }
+    }
+    private fun onLoadRepositoriesResult(repositoriesResult: LoadRepositoriesUseCase.Result) {
+        _loadRepositoriesError.value = repositoriesResult !is LoadRepositoriesUseCase.Result.Success
+        if (repositoriesResult is LoadRepositoriesUseCase.Result.Success) {
+            _repositories.value = repositoriesResult.repos
         }
     }
 
