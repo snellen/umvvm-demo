@@ -46,11 +46,17 @@ class LoginFragment : GithubBrowserFragment<LoginComponent, FragmentLoginBinding
     }
 
     fun onAfterCredentialsChanged() {
-        // TODO
+        viewModel.onCredentialsChanged(
+            binding.username.text.toString(),
+            binding.accessToken.text.toString()
+        )
     }
 
     fun onLoginRequested(view: View) {
-        // TODO
+        viewModel.onLoginRequested(
+            binding.username.text.toString(),
+            binding.accessToken.text.toString()
+        )
     }
 
 }
