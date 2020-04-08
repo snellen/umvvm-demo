@@ -23,6 +23,10 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     compileOptions {
         // Required for OkHttp 3.13+
         targetCompatibility = JavaVersion.VERSION_1_8
