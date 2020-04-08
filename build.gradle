@@ -5,6 +5,7 @@ buildscript {
     ext.dagger_version = '2.27'
     ext.retrofit_version = '2.8.1'
     ext.timber_version = '4.7.1'
+    ext.umvvm_version = '1.0.0'
     repositories {
         google()
         jcenter()
@@ -19,11 +20,24 @@ buildscript {
     }
 }
 
+def githubProperties = new Properties()
+def githubPropertiesFile = rootProject.file("github.properties")
+if(githubPropertiesFile.canRead()) {
+    githubProperties.load(new FileInputStream(githubPropertiesFile))
+}
+
 allprojects {
     repositories {
         google()
         jcenter()
-        
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/snellen/umvvm")
+            credentials {
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+            }
+        }
     }
 }
 
