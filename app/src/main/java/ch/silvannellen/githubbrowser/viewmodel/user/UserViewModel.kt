@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ch.silvannellen.githubbrowser.model.github.CodeRepository
 import ch.silvannellen.githubbrowser.usecase.loadrepositories.LoadRepositoriesUseCase
 import ch.silvannellen.githubbrowser.usecase.loaduser.LoadUserUseCase
+import ch.silvannellen.githubbrowser.usecase.sortrepositories.SortRepositoriesUseCase
 import ch.silvannellen.githubbrowser.viewmodel.common.Event
 import ch.silvannellen.umvvm.viewmodel.BaseViewModel
 import kotlinx.coroutines.coroutineScope
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 class UserViewModel @Inject constructor(
     private val loadUserUseCase: LoadUserUseCase,
-    private val loadRepositoriesUseCase: LoadRepositoriesUseCase
+    private val loadRepositoriesUseCase: LoadRepositoriesUseCase,
+    private val sortRepositoriesUseCase: SortRepositoriesUseCase
 ) : BaseViewModel() {
 
     private val _userName: MutableLiveData<String> = MutableLiveData()
@@ -65,10 +67,10 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    private fun onLoadRepositoriesResult(repositoriesResult: LoadRepositoriesUseCase.Result) {
+    private suspend fun onLoadRepositoriesResult(repositoriesResult: LoadRepositoriesUseCase.Result) {
         _loadRepositoriesError.value = repositoriesResult !is LoadRepositoriesUseCase.Result.Success
         if (repositoriesResult is LoadRepositoriesUseCase.Result.Success) {
-            _repositories.value = repositoriesResult.repos
+            _repositories.value = sortRepositoriesUseCase.execute(repositoriesResult.repos)
         }
     }
 
