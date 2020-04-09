@@ -1,9 +1,7 @@
 package ch.silvannellen.githubbrowser.usecase.searchcommits.impl
 
-import ch.silvannellen.githubbrowser.model.github.CodeRepository
 import ch.silvannellen.githubbrowser.model.github.Commit
 import ch.silvannellen.githubbrowser.usecase.searchcommits.SearchCommitsUseCase
-import ch.silvannellen.githubbrowser.usecase.sortrepositories.SortRepositoriesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

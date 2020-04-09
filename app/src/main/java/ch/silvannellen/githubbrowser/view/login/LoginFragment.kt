@@ -6,11 +6,11 @@ import androidx.navigation.fragment.findNavController
 import ch.silvannellen.githubbrowser.R
 import ch.silvannellen.githubbrowser.databinding.FragmentLoginBinding
 import ch.silvannellen.githubbrowser.di.GithubBrowserApplicationComponent
-import ch.silvannellen.githubbrowser.viewmodel.common.EventObserver
 import ch.silvannellen.githubbrowser.view.framework.GithubBrowserFragment
 import ch.silvannellen.githubbrowser.view.framework.KeyboardUtils
 import ch.silvannellen.githubbrowser.view.login.di.DaggerLoginComponent
 import ch.silvannellen.githubbrowser.view.login.di.LoginComponent
+import ch.silvannellen.githubbrowser.viewmodel.common.EventObserver
 import ch.silvannellen.githubbrowser.viewmodel.login.LoginViewModel
 import ch.silvannellen.umvvm.viewmodel.BaseViewModel
 
