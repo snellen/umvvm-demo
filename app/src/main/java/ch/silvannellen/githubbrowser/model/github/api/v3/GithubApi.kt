@@ -1,5 +1,6 @@
 package ch.silvannellen.githubbrowser.model.github.api.v3
 
+import ch.silvannellen.githubbrowser.model.github.api.v3.dto.CommitNode
 import ch.silvannellen.githubbrowser.model.github.api.v3.dto.Repository
 import ch.silvannellen.githubbrowser.model.github.api.v3.dto.User
 import retrofit2.Call
@@ -20,4 +21,7 @@ interface GithubApi {
 
     @GET("/users/{user}/repos")
     fun getRepositories(@Path("user") user: String): Call<Collection<Repository>>
+
+    @GET("/repos/{user}/{repo}/commits")
+    fun getCommits(@Path("user") user: String, @Path("repo") repo: String): Call<Collection<CommitNode>>
 }

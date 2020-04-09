@@ -16,4 +16,10 @@ interface GithubRepository {
      * Get the repositories of the given user
      */
     fun getRepositories(userName: String): Result<Collection<CodeRepository>>
+
+
+    /**
+     * Get the commits in the given repo owned by the given owner
+     */
+    fun getCommits(owner: String, repo: String): Result<Collection<Commit>>
 }

@@ -20,5 +20,19 @@
         <argument
             android:name="userName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_userFragment_to_repositoryFragment"
+            app:destination="@id/repositoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/repositoryFragment"
+        android:name="ch.silvannellen.githubbrowser.view.repository.RepositoryFragment"
+        android:label="RepositoryFragment" >
+        <argument
+            android:name="ownerName"
+            app:argType="string" />
+        <argument
+            android:name="repoName"
+            app:argType="string" />
     </fragment>
 </navigation>

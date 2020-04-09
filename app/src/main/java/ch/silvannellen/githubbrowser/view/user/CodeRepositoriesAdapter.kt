@@ -8,10 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.silvannellen.githubbrowser.databinding.ItemCodeRepositoryBinding
 import ch.silvannellen.githubbrowser.model.github.CodeRepository
 
-class CodeRepositoriesAdapter: RecyclerView.Adapter<CodeRepositoriesAdapter.ViewHolder>() {
+/**
+ * Need to create a type for the callback (instead of a Kotlin function), so that it is accessible in
+ * the binding expression in the layout.
+ */
+interface CodeRepositorySelectedCallback {
+    fun onSelected(repository: CodeRepository)
+}
+
+class CodeRepositoriesAdapter(private val onRepositorySelected: (CodeRepository) -> Unit): RecyclerView.Adapter<CodeRepositoriesAdapter.ViewHolder>() {
 
     init {
         setHasStableIds(true)
+    }
+
+    private val selectedCallback = object : CodeRepositorySelectedCallback{
+        override fun onSelected(repository: CodeRepository) {
+            onRepositorySelected(repository)
+        }
     }
 
     private val repositories = mutableListOf<CodeRepository>()
@@ -25,6 +39,7 @@ class CodeRepositoriesAdapter: RecyclerView.Adapter<CodeRepositoriesAdapter.View
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemCodeRepositoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.repositorySelectedCallback = selectedCallback
         return ViewHolder(binding.root, binding)
     }
 
