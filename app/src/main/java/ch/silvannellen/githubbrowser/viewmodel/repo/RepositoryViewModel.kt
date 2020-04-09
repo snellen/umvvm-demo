@@ -4,16 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.silvannellen.githubbrowser.model.github.Commit
 import ch.silvannellen.githubbrowser.usecase.loadcommits.LoadCommitsUseCase
+import ch.silvannellen.githubbrowser.usecase.searchcommits.SearchCommitsUseCase
 import ch.silvannellen.umvvm.viewmodel.BaseViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RepositoryViewModel @Inject constructor(
-    private val loadCommitsUseCase: LoadCommitsUseCase
+    private val loadCommitsUseCase: LoadCommitsUseCase,
+    private val searchCommitsUseCase: SearchCommitsUseCase
 ) : BaseViewModel() {
 
     private lateinit var repoOwner: String
     private lateinit var repositoryName: String
+    private var searchQuery: String? = null
+    private var unfilteredCommits: Collection<Commit>? = null
 
     private val _repoName: MutableLiveData<String> = MutableLiveData()
     val repoName: LiveData<String> = _repoName
@@ -45,10 +49,16 @@ class RepositoryViewModel @Inject constructor(
         loadCommits(_refreshingCommits)
     }
 
+    fun searchCommits(query: String) {
+        searchQuery = if (query.isNotEmpty()) query else null
+        launch { updateCommits() }
+    }
+
     private fun loadCommits(loadingProperty: MutableLiveData<Boolean>) {
         loadingProperty.value = true
         _loadCommitsError.value = false
-        _commits.value = listOf()
+        _commits.value = emptyList()
+        unfilteredCommits = emptyList()
         launch {
             onLoadCommitsResult(
                 loadCommitsUseCase.execute(
@@ -62,11 +72,20 @@ class RepositoryViewModel @Inject constructor(
         }
     }
 
-    private fun onLoadCommitsResult(loadCommitsResult: LoadCommitsUseCase.Result) {
+    private suspend fun onLoadCommitsResult(loadCommitsResult: LoadCommitsUseCase.Result) {
         _loadCommitsError.value = loadCommitsResult !is LoadCommitsUseCase.Result.Success
         if (loadCommitsResult is LoadCommitsUseCase.Result.Success) {
-            _commits.value = loadCommitsResult.commits
+            unfilteredCommits = loadCommitsResult.commits
+            updateCommits()
         }
+    }
+
+    private suspend fun updateCommits() {
+        _commits.value = unfilteredCommits?.let { commits ->
+            searchQuery?.let { query ->
+                searchCommitsUseCase.execute(SearchCommitsUseCase.Input(query, commits))
+            } ?: commits
+        } ?: emptyList()
     }
 
 }

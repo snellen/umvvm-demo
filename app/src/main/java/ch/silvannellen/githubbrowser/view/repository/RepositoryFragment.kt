@@ -57,7 +57,7 @@ class RepositoryFragment : GithubBrowserFragment<RepositoryComponent, FragmentRe
 
 
             viewModel.commits.observe(viewLifecycleOwner, Observer {
-                (binding.commitList.adapter as CommitAdapter).setRepositories(it)
+                (binding.commitList.adapter as CommitAdapter).setCommits(it)
             })
 
             viewModel.refreshingCommits.observe(viewLifecycleOwner, Observer {

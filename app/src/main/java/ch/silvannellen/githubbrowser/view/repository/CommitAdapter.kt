@@ -16,7 +16,7 @@ class CommitAdapter: RecyclerView.Adapter<CommitAdapter.ViewHolder>() {
 
     private val commits = mutableListOf<Commit>()
 
-    fun setRepositories(repos: Collection<Commit>) {
+    fun setCommits(repos: Collection<Commit>) {
         val diff = DiffUtil.calculateDiff(DiffUtilCallback(commits, repos))
         commits.clear()
         commits.addAll(repos)

@@ -9,4 +9,5 @@
     <string name="load_user_failed_message">Failed to load user info</string>
     <string name="load_repository_failed_message">Failed to load the repository list, swipe to try again</string>
     <string name="load_commits_failed_message">Failed to load commits, swipe to try again</string>
+    <string name="search_commits">Search Commits</string>
 </resources>
